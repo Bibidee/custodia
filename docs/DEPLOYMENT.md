@@ -18,7 +18,7 @@ event-emission runtime incompatibility. It is superseded by the v0.2.0 source.
 
 ## v0.2.0 release candidate
 
-- Frozen source commit: pending final commit
+- Frozen source commit: `a3696e40b8bb1d3f8ce3505806e273ba93fb25e0`
 - Local SHA-256: `402e67122ad88fdb2d315cfb50cedf010624f04ac99eee75b6eb9eff022ff7c9`
 - Deployment: not yet performed for this source
 - Source parity: must be verified after fresh deployment

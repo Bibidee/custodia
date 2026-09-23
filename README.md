@@ -24,7 +24,8 @@ availability and semantic uncertainty fail closed.
 
 ## Release evidence
 
-The current v0.2.0 source is frozen after the hardening pass and has SHA-256
+The current v0.2.0 source is frozen at commit
+`a3696e40b8bb1d3f8ce3505806e273ba93fb25e0` and has SHA-256
 `402e67122ad88fdb2d315cfb50cedf010624f04ac99eee75b6eb9eff022ff7c9`.
 The v0.1.1 deployment is historical and must not be treated as the current
 release. A fresh v0.2.0 deployment is required after the source is frozen.
