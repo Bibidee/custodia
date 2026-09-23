@@ -60,6 +60,18 @@
       "ret": "null",
       "payable": true
     },
+    "expire": {
+      "params": [
+        [
+          "escrow_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    },
     "get_escrow": {
       "params": [
         [

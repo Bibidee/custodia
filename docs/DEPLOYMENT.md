@@ -1,12 +1,12 @@
 # Custodia deployment
 
-## Current v0.1.1 deployment
+## Historical v0.1.1 deployment
 
 - Network: Studionet
 - Contract: `0x1164fB94319dedBB841059E3d20E99f1DfC85C82`
 - Deployment transaction: `0x5b465c30fc5a2ee0b09bb3491d12b32711d1fc198d46c4de97f854581648e7a6`
 - Finalization: `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
-- Source commit: `510c262`
+- Source commit: `510c262fb808b80bee94d4be33cae0a386103354`
 - Local SHA-256: `b39d55659480c381bc654371abc43188dddf13d7de779d4647f25280d5e0e9d8`
 - Source parity: `VERIFIED` via `gen_getContractCode`; 13,348 bytes matched exactly
 - `get_info()`: `Custodia`, version `0.1.1`, min confidence `75`, max artifact bytes `16000`
@@ -14,10 +14,16 @@
 The first deployment (`0xa2297650162FA6eA2DAb37c96A52116F04Cf27f4`, tx
 `0x73da61ee846b9cde516966e04290cdf797beabc79e06c346319c42148504798a`) is
 historical and superseded. Its first live proposal exposed a Studionet
-event-emission runtime incompatibility; v0.1.1 removes that unsupported event
-surface without changing the escrow accounting or semantic decision rules.
+event-emission runtime incompatibility. It is superseded by the v0.2.0 source.
 
-## Live lifecycle evidence
+## v0.2.0 release candidate
+
+- Frozen source commit: pending final commit
+- Local SHA-256: `402e67122ad88fdb2d315cfb50cedf010624f04ac99eee75b6eb9eff022ff7c9`
+- Deployment: not yet performed for this source
+- Source parity: must be verified after fresh deployment
+
+## Historical v0.1.1 live lifecycle evidence
 
 The v0.1.1 proposal
 `0x57fcc744ed1e7cd689a95615bf75879de5330f5cd5baebb7902530a66d182d2a`
