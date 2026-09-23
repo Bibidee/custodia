@@ -111,6 +111,33 @@ def test_expire_pending_and_approved_recovery(direct_vm, direct_deploy, direct_a
     assert contract.get_escrow("H-003")["status"] == "settled"
 
 
+def test_approved_consumer_settlement_pays_once_and_zeroes_ledger(direct_vm, direct_deploy, direct_alice, direct_bob):
+    contract = deployed(direct_deploy, direct_vm)
+    import importlib
+    contract_gl = importlib.import_module(contract.__class__.__module__).gl
+    create(contract, direct_vm, direct_alice, direct_bob, "H-APPROVED", 3600)
+    web_ok(direct_vm)
+    llm_ok(direct_vm)
+    direct_vm.sender = direct_alice
+    contract.review("H-APPROVED")
+    assert contract.get_escrow("H-APPROVED")["status"] == "approved"
+
+    # The consumer may release an approval after the review window, while the
+    # recovery window is still open. Settlement must clear the ledger before
+    # emitting the transfer and a second settlement must fail.
+    direct_vm.warp("2026-09-22T13:00:01Z")
+    contract_gl.message_raw["datetime"] = "2026-09-22T13:00:01Z"
+    direct_vm.sender = direct_bob
+    contract.settle("H-APPROVED")
+    settled = contract.get_escrow("H-APPROVED")
+    assert settled["status"] == "consumed"
+    assert settled["settlement"] == "paid_beneficiary"
+    assert settled["deposited"] == "0"
+    assert settled["settled_amount"] == str(10**18)
+    with direct_vm.expect_revert():
+        contract.settle("H-APPROVED")
+
+
 def test_validator_disagreement_is_not_approval(direct_vm, direct_deploy, direct_alice, direct_bob):
     contract = deployed(direct_deploy, direct_vm)
     create(contract, direct_vm, direct_alice, direct_bob, "H-004")

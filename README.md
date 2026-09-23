@@ -92,3 +92,7 @@ current source SHA-256 is `2f62f4d2e6ff62a4f8c83fe96a1f8973b83c9026ea715f7508664
 It
 is not yet deployed. The v0.2.1 deployment above remains historical until a
 fresh v0.2.2 deployment is explicitly approved and source parity is verified.
+
+The release gate currently passes 12 Direct Mode tests, including approved
+consumer settlement, ledger-zeroing before payout, and settlement replay
+rejection. Preflight, GenVM lint, and ABI/schema generation also pass.
