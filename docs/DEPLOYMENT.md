@@ -90,6 +90,9 @@ The v0.2.1 deployment remains historical.
 - Review: `0x229a7501615ee458d0cf17ef2fa97a9102ca35577c38108f978b54485ad5f7a3`
   - `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
   - Result: `retryable`, reason `malformed_model_output`; no approval or payout was created.
+- Timeout settlement: `0x6a4365727186afd5a96847b191751f68c2b5d091c37621d9fc0b7591b5a27f8e`
+  - `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
+  - Result: `refunded_sponsor`; final state `settled`, `deposited=0`, `settled_amount=1000000000000000`.
 
 The current Studionet provider still returns a structured-output shape that
 does not pass the contract's deterministic parser. This is recorded as safe

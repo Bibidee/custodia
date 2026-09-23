@@ -108,6 +108,10 @@ state read. Review
 `0x229a7501615ee458d0cf17ef2fa97a9102ca35577c38108f978b54485ad5f7a3`
 finalized `MAJORITY_AGREE / GenVM SUCCESS` but safely recorded
 `retryable / malformed_model_output`; no approval or payout was created.
+After the timeout, settlement
+`0x6a4365727186afd5a96847b191751f68c2b5d091c37621d9fc0b7591b5a27f8e`
+finalized `MAJORITY_AGREE / GenVM SUCCESS`, refunded the sponsor, and left
+`status=settled`, `deposited=0`, `settled_amount=1000000000000000`.
 This preserves the fail-closed live evidence. A live approved payout is not
 claimed because the Studionet provider continues to return an opaque malformed
 structured result.
