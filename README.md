@@ -144,12 +144,35 @@ The probe was then cancelled in
 which finalized successfully and left `status=cancelled`, `deposited=0`, and
 `settlement=cancelled_refunded`.
 
-## v0.2.4 diagnostic candidate
+## v0.2.4 live diagnostic deployment
 
-The current source adds bounded schema-failure codes for malformed LLM
-responses, such as `invalid_json`, `missing_fields`,
-`invalid_confidence_type`, and `rationale_too_long`. These codes expose only
-structural metadata; they never include the provider's raw response. Malformed
-results still fail validator equivalence and cannot authorize payment. The
-candidate passes local Direct Mode and preflight checks, but it is not deployed
-and has no live diagnostic result yet.
+The diagnostic source is deployed at
+`0x062e737ea928999e233C134da2557bC5F757785e` with deployment transaction
+`0x075250f718178b2493fd65dc9bd9108998d8490fea481ca8078d3f2441640c1b`.
+It finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`. `get_info()` reports
+version `0.2.4`; deployed code retrieved with `gen_getContractCode` matched the
+local source byte-for-byte (21,167 bytes, SHA-256
+`342d790c1362bd2dff6252e18622673e94d01feb651158e0730355d1e6c789b0`).
+
+The controlled diagnostic escrow `CUSTODIA-V24-DIAG-1790206889939` was
+proposed in `0x221faac1141e7597c962a38ecaed3c12783fb3bef6483788e654fcb748113ffd`.
+The review transaction
+`0x2534f65f5384435cb09c2dc703f5c6d7b45fe8a4c1db62566b93c3a6b1c957aa`
+finalized `UNDETERMINED / MAJORITY_DISAGREE / GenVM SUCCESS`. Its bounded
+diagnostic was `malformed_model_output:invalid_enum_deliverable_match`: the
+`deliverable_match` field did not normalize to one of the contract's allowed
+enum values. The Explorer does not expose the raw provider value, so its exact
+text is unknown. The escrow was then cancelled and refunded in
+`0x2060efbc58d5e7061faf5e88b3f8f9fc5e80f93a7c936467448b64f7475b7b2f`,
+finalizing `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS` with
+`status=cancelled`, `deposited=0`, and `settlement=cancelled_refunded`.
+
+## v0.2.5 candidate
+
+This candidate clarifies the semantic prompt with exact lowercase enum
+vocabulary and field definitions, along with explicit JSON type and length
+constraints. It does not accept synonyms or change the strict approval tuple.
+The v0.2.4 invalid-enum diagnostic suggests that the prior prompt's omission of
+allowed values may have contributed to the mismatch; because the raw value is
+unavailable, that causal link is plausible but not proven. v0.2.5 is not
+deployed until its release gate and source-parity checks complete.

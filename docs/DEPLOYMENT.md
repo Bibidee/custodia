@@ -127,16 +127,38 @@ This is the expected v0.2.3 liveness behavior: malformed provider output is
 not an agreed semantic result and instead fails equivalence, preserving the
 prior state for retry or safe refund.
 
-### v0.2.4 diagnostic candidate — not deployed
+### v0.2.4 live diagnostic deployment
 
-The current candidate attaches a bounded schema-failure code to the
-non-authorizing malformed-output observation. Codes distinguish invalid JSON,
-non-object results, missing/mismatched fields, invalid enum fields, invalid or
-out-of-range confidence, and invalid/empty/oversized rationale. It does not
-include raw model text. Validator equivalence rejects every class beginning
-with `malformed_model_output`, so this diagnostic cannot approve or settle an
-escrow. Local tests and preflight pass; deployment and live receipt evidence
-are pending.
+- Contract: `0x062e737ea928999e233C134da2557bC5F757785e`
+- Deployment transaction: `0x075250f718178b2493fd65dc9bd9108998d8490fea481ca8078d3f2441640c1b`
+- Finalized result: `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
+- `get_info()` version: `0.2.4`
+- Source parity: byte-for-byte verified via `gen_getContractCode`, 21,167 bytes, SHA-256 `342d790c1362bd2dff6252e18622673e94d01feb651158e0730355d1e6c789b0`
+
+Diagnostic escrow `CUSTODIA-V24-DIAG-1790206889939` was proposed in
+`0x221faac1141e7597c962a38ecaed3c12783fb3bef6483788e654fcb748113ffd`.
+Review transaction
+`0x2534f65f5384435cb09c2dc703f5c6d7b45fe8a4c1db62566b93c3a6b1c957aa`
+finalized `UNDETERMINED / MAJORITY_DISAGREE / GenVM SUCCESS`. Explorer's
+bounded equivalence output classified it as
+`malformed_model_output:invalid_enum_deliverable_match`. This identifies the
+field that failed but not the raw value; the provider response itself is not
+exposed by the available receipt interface. The escrow was safely cancelled
+and refunded in
+`0x2060efbc58d5e7061faf5e88b3f8f9fc5e80f93a7c936467448b64f7475b7b2f`,
+which finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; final state was
+`cancelled`, `deposited=0`, `settlement=cancelled_refunded`.
+
+### v0.2.5 candidate
+
+The candidate makes every enum's permitted lowercase tokens, field meaning,
+confidence type/range, rationale bound, and JSON-only format explicit in the
+review prompt. It preserves strict parser validation and the current approval
+predicate. The diagnosis points to an enum mismatch in `deliverable_match`,
+but the raw enum value is unavailable, so the prior prompt's lack of explicit
+vocabulary is a plausible cause, not a confirmed provider response. Do not
+claim a successful live approval or payout until the new source is deployed
+and a real approved settlement is observed.
 
 ## Historical v0.1.1 live lifecycle evidence
 
