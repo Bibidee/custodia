@@ -1,4 +1,4 @@
-# v0.2.1
+# v0.2.2
 # { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 """Custodia: hash-bound, consensus-reviewed milestone escrow.
 
@@ -35,6 +35,7 @@ MAX_ARTIFACT_BYTES = 16000
 MIN_REVIEW_WINDOW = 3600
 MAX_REVIEW_WINDOW = 30 * 24 * 60 * 60
 MIN_CONFIDENCE = 75
+MAX_CONFIDENCE_DELTA = 20
 MIN_DEPOSIT = 10**15
 MAX_REVIEW_ATTEMPTS = 3
 EXPECTED = "[EXPECTED]"
@@ -232,7 +233,12 @@ def verdict(value: dict) -> str:
 def equivalent(left, right) -> bool:
     if not valid_analysis(left) or not valid_analysis(right):
         return False
-    return verdict(left) == verdict(right)
+    if verdict(left) != verdict(right):
+        return False
+    for key in ("deliverable_match", "evidence_support", "risk"):
+        if left[key] != right[key]:
+            return False
+    return abs(left["confidence"] - right["confidence"]) <= MAX_CONFIDENCE_DELTA
 
 
 def observe(review_input: dict) -> dict:
@@ -390,4 +396,4 @@ class Custodia(gl.Contract):
 
     @gl.public.view
     def get_info(self) -> dict:
-        return {"name": "Custodia", "version": "0.2.1", "min_confidence": str(MIN_CONFIDENCE), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "max_review_attempts": str(MAX_REVIEW_ATTEMPTS), "min_deposit": str(MIN_DEPOSIT), "escrow_count": str(self.escrow_count)}
+        return {"name": "Custodia", "version": "0.2.2", "min_confidence": str(MIN_CONFIDENCE), "max_confidence_delta": str(MAX_CONFIDENCE_DELTA), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "max_review_attempts": str(MAX_REVIEW_ATTEMPTS), "min_deposit": str(MIN_DEPOSIT), "escrow_count": str(self.escrow_count)}

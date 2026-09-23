@@ -65,6 +65,15 @@ the contract remains fail closed. It is not an approved lifecycle claim.
 
 The run confirms fail-closed behavior, but does not claim an approved payout.
 
+## v0.2.2 release candidate
+
+- Source version: `0.2.2`
+- Local SHA-256: `2f62f4d2e6ff62a4f8c83fe96a1f8973b83c9026ea715f750866483401e44ab3`
+- Deployment: not yet performed
+- Equivalence rule: final verdict must match; `deliverable_match`, `evidence_support`, and `risk` must match exactly; confidence may differ by at most 20 points; rationale is explanatory and non-authorizing.
+- Release gate: 11 tests passed, preflight passed, GenVM lint passed, ABI/schema passed.
+- Next step: explicitly approve one fresh Studionet deployment, then verify source parity and collect live evidence. The v0.2.1 deployment remains historical.
+
 ## Historical v0.1.1 live lifecycle evidence
 
 The v0.1.1 proposal

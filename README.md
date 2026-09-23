@@ -71,3 +71,23 @@ Refund settlement
 `0xe97e263bb86fc74a0576df0d8c049fb9704d192668aa15622ba427769b356a9e`
 finalized successfully and returned the full deposit, leaving `settled` with
 `deposited=0`.
+
+## Security model
+
+Custodia verifies exact raw artifact bytes against committed SHA-256 digests
+before semantic review. HTTPS admission rejects local, private, loopback,
+link-local, reserved, multicast, and credential-bearing URLs; it cannot prove
+DNS or redirect safety. Artifact text is untrusted and is explicitly fenced
+against prompt injection. Malformed model output, unavailable sources, hash
+mismatches, and validator disagreement fail closed and remain refundable.
+Validators must now agree on the final verdict, all three semantic fields, and
+stay within a 20-point confidence band. Consumer abandonment is bounded by a
+recovery deadline that refunds the sponsor.
+
+## v0.2.2 release candidate
+
+The v0.2.2 source adds bounded semantic equivalence and adversarial tests. Its
+current source SHA-256 is `2f62f4d2e6ff62a4f8c83fe96a1f8973b83c9026ea715f750866483401e44ab3`.
+It
+is not yet deployed. The v0.2.1 deployment above remains historical until a
+fresh v0.2.2 deployment is explicitly approved and source parity is verified.
