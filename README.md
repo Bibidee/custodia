@@ -24,10 +24,15 @@ availability and semantic uncertainty fail closed.
 
 ## Release evidence
 
-The current v0.2.0 source is frozen at commit
-`a3696e40b8bb1d3f8ce3505806e273ba93fb25e0` and has SHA-256
+The deployed v0.2.0 source is preserved at commit
+`a3696e40b8bb1d3f8ce3505806e273ba93fb25e0` with SHA-256
 `402e67122ad88fdb2d315cfb50cedf010624f04ac99eee75b6eb9eff022ff7c9`.
-The current v0.2.0 Studionet deployment is
+The v0.2.0 Studionet deployment is historical. The hardened v0.2.1 source
+is at commit `8d3073798c9583fcc9edae229fa44399cf18ca33` with SHA-256
+`bf54d33f3d1756920714d3d8ede4d8883b7a51760eb3cfd51a52374a5cab508b` and
+requires a fresh deployment.
+
+The historical v0.2.0 Studionet deployment is
 `0xeb971A2d98B20f3908F116136A3A8A4A68a6efaf` (deployment transaction
 `0xedaf83645cd92d2572b3bb5459c25eb7c91f614389200c40b848e315272d30c5`).
 Explorer: https://explorer-studio.genlayer.com/address/0xeb971A2d98B20f3908F116136A3A8A4A68a6efaf
@@ -48,6 +53,8 @@ finalized with GenVM `SUCCESS`; the full `0.001 GEN` deposit was refunded,
 leaving `status=settled`, `deposited=0`, and `settled_amount=1000000000000000`.
 
 This live result demonstrates fail-closed behavior; it does not claim an
-approved payout. v0.2.0 adds storage snapshots for
+approved payout. v0.2.1 adds deterministic normalization for fenced JSON and
+safe non-semantic metadata while preserving strict approval predicates. The
+underlying v0.2.0 design adds storage snapshots for
 nondeterministic review, bounded retry attempts, explicit expiry recovery,
 consumer-abandonment recovery, and stronger settlement authorization.

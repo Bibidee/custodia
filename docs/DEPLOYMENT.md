@@ -16,7 +16,7 @@ The first deployment (`0xa2297650162FA6eA2DAb37c96A52116F04Cf27f4`, tx
 historical and superseded. Its first live proposal exposed a Studionet
 event-emission runtime incompatibility. It is superseded by the v0.2.0 source.
 
-## Current v0.2.0 deployment
+## Historical v0.2.0 deployment
 
 - Frozen source commit: `a3696e40b8bb1d3f8ce3505806e273ba93fb25e0`
 - Local SHA-256: `402e67122ad88fdb2d315cfb50cedf010624f04ac99eee75b6eb9eff022ff7c9`
@@ -28,7 +28,7 @@ event-emission runtime incompatibility. It is superseded by the v0.2.0 source.
 - Source parity: `VERIFIED` via `gen_getContractCode`, byte-for-byte
 - `get_info()`: `Custodia`, version `0.2.0`, min confidence `75`, max artifact bytes `16000`, max review attempts `3`, min deposit `1000000000000000`
 
-### v0.2.0 live verification
+### Historical v0.2.0 live verification
 
 - Proposal: `0x1fed850b1337b73a07b3638454ee1b9615e90debbaab2e2a1080f6f062968ba4`
   - `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
@@ -43,6 +43,14 @@ event-emission runtime incompatibility. It is superseded by the v0.2.0 source.
 
 The review outcome is an honest provider/model-format limitation and confirms
 the contract remains fail closed. It is not an approved lifecycle claim.
+
+## v0.2.1 release candidate
+
+- Source commit: `8d3073798c9583fcc9edae229fa44399cf18ca33`
+- Local SHA-256: `bf54d33f3d1756920714d3d8ede4d8883b7a51760eb3cfd51a52374a5cab508b`
+- Deployment: not yet performed
+- Required next step: fresh Studionet deployment, source retrieval via `gen_getContractCode`, byte-for-byte parity verification, and a controlled live review.
+- Change scope: deterministic normalization of fenced JSON and non-semantic metadata; strict bounded approval conditions are unchanged.
 
 ## Historical v0.1.1 live lifecycle evidence
 
