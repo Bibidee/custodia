@@ -143,3 +143,13 @@ The probe was then cancelled in
 `0x1446d6d89d230e25996ca40f3b979482b98e1a01ef759de18f84e806d8e41383`,
 which finalized successfully and left `status=cancelled`, `deposited=0`, and
 `settlement=cancelled_refunded`.
+
+## v0.2.4 diagnostic candidate
+
+The current source adds bounded schema-failure codes for malformed LLM
+responses, such as `invalid_json`, `missing_fields`,
+`invalid_confidence_type`, and `rationale_too_long`. These codes expose only
+structural metadata; they never include the provider's raw response. Malformed
+results still fail validator equivalence and cannot authorize payment. The
+candidate passes local Direct Mode and preflight checks, but it is not deployed
+and has no live diagnostic result yet.

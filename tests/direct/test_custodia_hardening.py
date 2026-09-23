@@ -194,9 +194,46 @@ def test_malformed_model_output_forces_validator_disagreement(direct_vm, direct_
     assert contract.get_escrow("H-MALFORMED")["status"] == "retryable"
     # The Direct Mode validator hook represents the same malformed provider
     # shape. It must reject equivalence rather than endorse the error.
+    module = __import__(contract.__class__.__module__, fromlist=["malformed_output_class"])
+    assert module.malformed_output_class("not valid structured output") == "malformed_model_output:invalid_json"
     assert direct_vm.run_validator(leader_result={
-        "kind": "error", "class": "malformed_model_output"
+        "kind": "error", "class": "malformed_model_output:invalid_json"
     }) is False
+
+
+def test_malformed_output_diagnostics_are_bounded_and_non_authorizing(direct_vm, direct_deploy, direct_alice, direct_bob):
+    """Expose only a stable failure category; never include provider content."""
+    contract = deployed(direct_deploy, direct_vm)
+    create(contract, direct_vm, direct_alice, direct_bob, "H-DIAG")
+    web_ok(direct_vm)
+    llm_ok(direct_vm)
+    direct_vm.sender = direct_alice
+    contract.review("H-DIAG")
+    module = __import__(contract.__class__.__module__, fromlist=["malformed_output_class"])
+    base = {
+        "deliverable_match": "yes", "evidence_support": "yes", "risk": "no",
+        "confidence": 90, "rationale": "Valid fixture.",
+    }
+    cases = [
+        ("not JSON", "malformed_model_output:invalid_json"),
+        ([base], "malformed_model_output:not_object_array"),
+        ({"confidence": 90}, "malformed_model_output:missing_fields"),
+        ({"unexpected": "metadata"}, "malformed_model_output:field_set_mismatch"),
+        ({**base, "deliverable_match": "maybe"}, "malformed_model_output:invalid_enum_deliverable_match"),
+        ({**base, "confidence": True}, "malformed_model_output:invalid_confidence_type"),
+        ({**base, "confidence": 101}, "malformed_model_output:confidence_out_of_range"),
+        ({**base, "rationale": " "}, "malformed_model_output:empty_rationale"),
+        ({**base, "rationale": "x" * 501}, "malformed_model_output:rationale_too_long"),
+    ]
+    for raw, expected in cases:
+        diagnostic = module.malformed_output_class(raw)
+        assert diagnostic == expected
+        assert direct_vm.run_validator(leader_result={"kind": "error", "class": diagnostic}) is False
+    # Harmless metadata remains ignored only after all required bounded fields
+    # are present; it cannot change the deterministic authorization tuple.
+    normalized = module.normalize_model_output({**base, "provider_note": "metadata"})
+    assert module.valid_analysis(normalized)
+    assert module.verdict(normalized) == "approved"
 
 
 def test_prompt_injection_evidence_fails_closed(direct_vm, direct_deploy, direct_alice, direct_bob):

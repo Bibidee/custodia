@@ -100,7 +100,7 @@ fail-closed behavior; no approved live payout is claimed.
 
 ### v0.2.3 hardening and deployment
 
-The unreleased v0.2.3 source changes only malformed-model consensus handling:
+The v0.2.3 source changes only malformed-model consensus handling:
 malformed output now makes validator equivalence fail, forcing leader rotation
 instead of finalizing an agreed `retryable / malformed_model_output` result.
 The strict approval tuple and fail-closed artifact behavior are unchanged.
@@ -126,6 +126,17 @@ The strict approval tuple and fail-closed artifact behavior are unchanged.
 This is the expected v0.2.3 liveness behavior: malformed provider output is
 not an agreed semantic result and instead fails equivalence, preserving the
 prior state for retry or safe refund.
+
+### v0.2.4 diagnostic candidate — not deployed
+
+The current candidate attaches a bounded schema-failure code to the
+non-authorizing malformed-output observation. Codes distinguish invalid JSON,
+non-object results, missing/mismatched fields, invalid enum fields, invalid or
+out-of-range confidence, and invalid/empty/oversized rationale. It does not
+include raw model text. Validator equivalence rejects every class beginning
+with `malformed_model_output`, so this diagnostic cannot approve or settle an
+escrow. Local tests and preflight pass; deployment and live receipt evidence
+are pending.
 
 ## Historical v0.1.1 live lifecycle evidence
 

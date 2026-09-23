@@ -1,4 +1,4 @@
-# v0.2.3
+# v0.2.4
 # { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 """Custodia: hash-bound, consensus-reviewed milestone escrow.
 
@@ -40,6 +40,7 @@ MIN_DEPOSIT = 10**15
 MAX_REVIEW_ATTEMPTS = 3
 EXPECTED = "[EXPECTED]"
 ANALYSIS_KEYS = ("deliverable_match", "evidence_support", "risk", "confidence", "rationale")
+MALFORMED_OUTPUT_PREFIX = "malformed_model_output:"
 
 
 @allow_storage
@@ -208,6 +209,72 @@ def normalize_model_output(raw):
     return normalized
 
 
+def malformed_output_reason(value) -> str:
+    """Return a bounded schema-failure code without exposing model content."""
+    if not isinstance(value, dict):
+        if value is None:
+            return "not_object_null"
+        if isinstance(value, bool):
+            return "not_object_boolean"
+        if isinstance(value, (int, float)):
+            return "not_object_number"
+        if isinstance(value, list):
+            return "not_object_array"
+        return "not_object_other"
+
+    required = set(ANALYSIS_KEYS)
+    actual = set(value)
+    missing = required - actual
+    extra = actual - required
+    if missing and extra:
+        return "field_set_mismatch"
+    if len(missing) == 1:
+        return "missing_field_" + next(iter(missing))
+    if missing:
+        return "missing_fields"
+
+    for key in ("deliverable_match", "evidence_support", "risk"):
+        if value.get(key) not in ("yes", "no", "unclear"):
+            return "invalid_enum_" + key
+
+    confidence = value.get("confidence")
+    if not isinstance(confidence, int) or isinstance(confidence, bool):
+        return "invalid_confidence_type"
+    if confidence < 0 or confidence > 100:
+        return "confidence_out_of_range"
+
+    rationale = value.get("rationale")
+    if not isinstance(rationale, str):
+        return "invalid_rationale_type"
+    rationale = clean(rationale)
+    if not rationale:
+        return "empty_rationale"
+    if len(rationale) > MAX_TEXT:
+        return "rationale_too_long"
+    return "invalid_analysis"
+
+
+def malformed_output_class(raw) -> str:
+    """Classify a provider-format failure using safe structural metadata only."""
+    if isinstance(raw, str):
+        text = raw.strip()
+        if text.startswith("```") and text.endswith("```"):
+            lines = text.splitlines()
+            if len(lines) >= 3 and lines[0].strip().lower() in ("```", "```json") and lines[-1].strip() == "```":
+                text = "\n".join(lines[1:-1]).strip()
+        try:
+            raw = json.loads(text)
+        except Exception:
+            return MALFORMED_OUTPUT_PREFIX + "invalid_json"
+    if isinstance(raw, dict) and set(raw) == {"result"} and isinstance(raw["result"], dict):
+        raw = raw["result"]
+    try:
+        normalized = normalize_model_output(raw)
+    except Exception:
+        return MALFORMED_OUTPUT_PREFIX + "normalization_failure"
+    return MALFORMED_OUTPUT_PREFIX + malformed_output_reason(normalized)
+
+
 def valid_analysis(value) -> bool:
     if not isinstance(value, dict):
         return False
@@ -250,16 +317,22 @@ def observe(review_input: dict) -> dict:
                   "Return JSON with exactly deliverable_match, evidence_support, risk, confidence, rationale. "
                   "Approve only when the exact deliverable is supported by the evidence with no material risk.\n"
                   "BEGIN DATA\n" + data + "\nEND DATA")
-        raw = gl.nondet.exec_prompt(prompt, response_format="json")
-        parsed = normalize_model_output(raw)
+        try:
+            raw = gl.nondet.exec_prompt(prompt, response_format="json")
+        except Exception:
+            return {"kind": "error", "class": "llm_execution_failure"}
+        try:
+            parsed = normalize_model_output(raw)
+        except Exception:
+            return {"kind": "error", "class": malformed_output_class(raw)}
         if not valid_analysis(parsed):
-            return {"kind": "error", "class": "malformed_model_output"}
+            return {"kind": "error", "class": MALFORMED_OUTPUT_PREFIX + malformed_output_reason(parsed)}
         return {"kind": "analysis", "result": parsed}
     except ValueError as exc:
         known = {"fetch_unavailable", "http_unavailable", "bad_http_status", "empty_response", "artifact_too_large", "hash_mismatch", "invalid_utf8"}
-        return {"kind": "error", "class": str(exc) if str(exc) in known else "malformed_model_output"}
+        return {"kind": "error", "class": str(exc) if str(exc) in known else "observation_failure"}
     except Exception:
-        return {"kind": "error", "class": "fetch_unavailable"}
+        return {"kind": "error", "class": "observation_failure"}
 
 
 class Custodia(gl.Contract):
@@ -331,7 +404,7 @@ class Custodia(gl.Contract):
                 # leader/validator attempt instead.  This preserves the
                 # strict approval gate while avoiding provider-shape liveness
                 # failures becoming committed state.
-                if left.get("class") == "malformed_model_output":
+                if str(left.get("class", "")).startswith("malformed_model_output"):
                     return False
                 return left.get("class") == right.get("class")
             return equivalent(left.get("result"), right.get("result"))
@@ -404,4 +477,4 @@ class Custodia(gl.Contract):
 
     @gl.public.view
     def get_info(self) -> dict:
-        return {"name": "Custodia", "version": "0.2.3", "min_confidence": str(MIN_CONFIDENCE), "max_confidence_delta": str(MAX_CONFIDENCE_DELTA), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "max_review_attempts": str(MAX_REVIEW_ATTEMPTS), "min_deposit": str(MIN_DEPOSIT), "escrow_count": str(self.escrow_count)}
+        return {"name": "Custodia", "version": "0.2.4", "min_confidence": str(MIN_CONFIDENCE), "max_confidence_delta": str(MAX_CONFIDENCE_DELTA), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "max_review_attempts": str(MAX_REVIEW_ATTEMPTS), "min_deposit": str(MIN_DEPOSIT), "escrow_count": str(self.escrow_count)}
