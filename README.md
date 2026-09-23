@@ -87,6 +87,7 @@ recovery deadline that refunds the sponsor.
 ## v0.2.2 release candidate
 
 The v0.2.2 source adds bounded semantic equivalence and adversarial tests. Its
+source commit is `17a3fbe4fc2309aec14f27b81e3988ac0bd2d967`. Its
 current source SHA-256 is `2f62f4d2e6ff62a4f8c83fe96a1f8973b83c9026ea715f750866483401e44ab3`.
 It
 is not yet deployed. The v0.2.1 deployment above remains historical until a
