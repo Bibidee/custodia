@@ -30,7 +30,9 @@ The deployed v0.2.0 source is preserved at commit
 The v0.2.0 Studionet deployment is historical. The hardened v0.2.1 source
 is at commit `8d3073798c9583fcc9edae229fa44399cf18ca33` with SHA-256
 `bf54d33f3d1756920714d3d8ede4d8883b7a51760eb3cfd51a52374a5cab508b` and
-requires a fresh deployment.
+is deployed at `0x591f06AD9a5Ea228047B4b23209e2116df9Fd353` via transaction
+`0xe928f72a5cdfbe1c00fe519c069b50ccec3745a9b855f8b6a93c16ae857a9269`.
+Explorer: https://explorer-studio.genlayer.com/address/0x591f06AD9a5Ea228047B4b23209e2116df9Fd353
 
 The historical v0.2.0 Studionet deployment is
 `0xeb971A2d98B20f3908F116136A3A8A4A68a6efaf` (deployment transaction
@@ -58,3 +60,14 @@ safe non-semantic metadata while preserving strict approval predicates. The
 underlying v0.2.0 design adds storage snapshots for
 nondeterministic review, bounded retry attempts, explicit expiry recovery,
 consumer-abandonment recovery, and stronger settlement authorization.
+
+The v0.2.1 live proposal
+`0x555d812b3b0c55427cfb8ec91dc0ea2597445fee49d41696bd6ae49d8f86fcc7`
+finalized successfully and created `CUSTODIA-V21-LIVE-1790156954326` in
+`pending`. Review
+`0x211ce41957d8c8531f5da37b5938f5a6c7e37071dde4cd23a440cff9da711bab`
+finalized with GenVM success but returned `retryable / malformed_model_output`.
+Refund settlement
+`0xe97e263bb86fc74a0576df0d8c049fb9704d192668aa15622ba427769b356a9e`
+finalized successfully and returned the full deposit, leaving `settled` with
+`deposited=0`.

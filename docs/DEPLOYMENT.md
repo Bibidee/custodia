@@ -44,13 +44,26 @@ event-emission runtime incompatibility. It is superseded by the v0.2.0 source.
 The review outcome is an honest provider/model-format limitation and confirms
 the contract remains fail closed. It is not an approved lifecycle claim.
 
-## v0.2.1 release candidate
+## Current v0.2.1 deployment
 
 - Source commit: `8d3073798c9583fcc9edae229fa44399cf18ca33`
 - Local SHA-256: `bf54d33f3d1756920714d3d8ede4d8883b7a51760eb3cfd51a52374a5cab508b`
-- Deployment: not yet performed
-- Required next step: fresh Studionet deployment, source retrieval via `gen_getContractCode`, byte-for-byte parity verification, and a controlled live review.
+- Contract: `0x591f06AD9a5Ea228047B4b23209e2116df9Fd353`
+- Deployment transaction: `0xe928f72a5cdfbe1c00fe519c069b50ccec3745a9b855f8b6a93c16ae857a9269`
+- Explorer: https://explorer-studio.genlayer.com/address/0x591f06AD9a5Ea228047B4b23209e2116df9Fd353
+- Finalization: `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
+- Deployed source: 17,572 bytes, SHA-256 `bf54d33f3d1756920714d3d8ede4d8883b7a51760eb3cfd51a52374a5cab508b`
+- Source parity: `VERIFIED` via `gen_getContractCode`, byte-for-byte
+- `get_info()`: `Custodia`, version `0.2.1`, min confidence `75`, max artifact bytes `16000`, max review attempts `3`, min deposit `1000000000000000`
 - Change scope: deterministic normalization of fenced JSON and non-semantic metadata; strict bounded approval conditions are unchanged.
+
+### v0.2.1 live verification
+
+- Proposal: `0x555d812b3b0c55427cfb8ec91dc0ea2597445fee49d41696bd6ae49d8f86fcc7` — `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; exact pending state verified.
+- Review: `0x211ce41957d8c8531f5da37b5938f5a6c7e37071dde4cd23a440cff9da711bab` — `FINALIZED / MAJORITY_AGREE`; GenVM leader success; result `retryable / malformed_model_output`.
+- Settlement: `0xe97e263bb86fc74a0576df0d8c049fb9704d192668aa15622ba427769b356a9e` — `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; full deposit refunded; final state `settled`, `deposited=0`.
+
+The run confirms fail-closed behavior, but does not claim an approved payout.
 
 ## Historical v0.1.1 live lifecycle evidence
 
