@@ -115,3 +115,11 @@ finalized `MAJORITY_AGREE / GenVM SUCCESS`, refunded the sponsor, and left
 This preserves the fail-closed live evidence. A live approved payout is not
 claimed because the Studionet provider continues to return an opaque malformed
 structured result.
+
+## v0.2.3 hardening (unreleased)
+
+The working source now treats `malformed_model_output` as validator
+disagreement rather than an agreed semantic result. This forces leader
+rotation and prevents identical provider-shape failures from being committed
+as consensus. Approval predicates and artifact checks remain unchanged. A
+fresh deployment is required before v0.2.3 is live.

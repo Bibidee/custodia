@@ -98,6 +98,14 @@ The current Studionet provider still returns a structured-output shape that
 does not pass the contract's deterministic parser. This is recorded as safe
 fail-closed behavior; no approved live payout is claimed.
 
+### v0.2.3 hardening (not deployed)
+
+The unreleased v0.2.3 source changes only malformed-model consensus handling:
+malformed output now makes validator equivalence fail, forcing leader rotation
+instead of finalizing an agreed `retryable / malformed_model_output` result.
+The strict approval tuple and fail-closed artifact behavior are unchanged. No
+v0.2.3 deployment address or live evidence is claimed.
+
 ## Historical v0.1.1 live lifecycle evidence
 
 The v0.1.1 proposal

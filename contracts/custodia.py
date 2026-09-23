@@ -1,4 +1,4 @@
-# v0.2.2
+# v0.2.3
 # { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 """Custodia: hash-bound, consensus-reviewed milestone escrow.
 
@@ -325,6 +325,14 @@ class Custodia(gl.Contract):
             if left.get("kind") != right.get("kind"):
                 return False
             if left.get("kind") == "error":
+                # A malformed model response is not a semantic outcome.  Do
+                # not let identical malformed responses from leader and
+                # validator finalize as retryable consensus: force a fresh
+                # leader/validator attempt instead.  This preserves the
+                # strict approval gate while avoiding provider-shape liveness
+                # failures becoming committed state.
+                if left.get("class") == "malformed_model_output":
+                    return False
                 return left.get("class") == right.get("class")
             return equivalent(left.get("result"), right.get("result"))
         result = gl.vm.run_nondet_unsafe(leader, validator)
@@ -396,4 +404,4 @@ class Custodia(gl.Contract):
 
     @gl.public.view
     def get_info(self) -> dict:
-        return {"name": "Custodia", "version": "0.2.2", "min_confidence": str(MIN_CONFIDENCE), "max_confidence_delta": str(MAX_CONFIDENCE_DELTA), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "max_review_attempts": str(MAX_REVIEW_ATTEMPTS), "min_deposit": str(MIN_DEPOSIT), "escrow_count": str(self.escrow_count)}
+        return {"name": "Custodia", "version": "0.2.3", "min_confidence": str(MIN_CONFIDENCE), "max_confidence_delta": str(MAX_CONFIDENCE_DELTA), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "max_review_attempts": str(MAX_REVIEW_ATTEMPTS), "min_deposit": str(MIN_DEPOSIT), "escrow_count": str(self.escrow_count)}

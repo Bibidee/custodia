@@ -183,6 +183,22 @@ def test_equivalence_requires_semantic_tuple_and_bounded_confidence(direct_vm, d
     }}) is False
 
 
+def test_malformed_model_output_forces_validator_disagreement(direct_vm, direct_deploy, direct_alice, direct_bob):
+    """Malformed provider output must rotate, never become agreed retryable state."""
+    contract = deployed(direct_deploy, direct_vm)
+    create(contract, direct_vm, direct_alice, direct_bob, "H-MALFORMED")
+    web_ok(direct_vm)
+    direct_vm.mock_llm("Hardening fixture", "not valid structured output")
+    direct_vm.sender = direct_alice
+    contract.review("H-MALFORMED")
+    assert contract.get_escrow("H-MALFORMED")["status"] == "retryable"
+    # The Direct Mode validator hook represents the same malformed provider
+    # shape. It must reject equivalence rather than endorse the error.
+    assert direct_vm.run_validator(leader_result={
+        "kind": "error", "class": "malformed_model_output"
+    }) is False
+
+
 def test_prompt_injection_evidence_fails_closed(direct_vm, direct_deploy, direct_alice, direct_bob):
     contract = deployed(direct_deploy, direct_vm)
     create(contract, direct_vm, direct_alice, direct_bob, "H-007")
