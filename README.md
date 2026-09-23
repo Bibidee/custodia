@@ -130,3 +130,16 @@ It finalized with `MAJORITY_AGREE / GenVM SUCCESS`. Source retrieval through
 `gen_getContractCode` matched the repository byte-for-byte: 18,400 bytes and
 SHA-256 `1e8377c3fc49a4f8f49eeeea59e0ca8e2fb49b3de7650985024c207cfe306b37`.
 `get_info()` reports version `0.2.3`.
+
+The controlled v0.2.3 review probe created
+`CUSTODIA-V23-REVIEW-1790193048775` in proposal transaction
+`0xa63b5b23b8c370ef4adfc2e3ba188ba114b86fe3283e84be64e4fbcae723e42a`.
+Its review transaction
+`0xf59ef0743e4c5d52a8629f7862a4f4602fdacaa9f05e6459fd78920ee3df7ec0`
+finalized `UNDETERMINED / MAJORITY_DISAGREE / GenVM SUCCESS`; the canonical
+state remained `pending` with the deposit held. This demonstrates that
+malformed provider output no longer finalizes as agreed retryable consensus.
+The probe was then cancelled in
+`0x1446d6d89d230e25996ca40f3b979482b98e1a01ef759de18f84e806d8e41383`,
+which finalized successfully and left `status=cancelled`, `deposited=0`, and
+`settlement=cancelled_refunded`.

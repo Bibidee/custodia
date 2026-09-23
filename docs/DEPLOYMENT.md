@@ -111,6 +111,22 @@ The strict approval tuple and fail-closed artifact behavior are unchanged.
 - `get_info()`: `Custodia`, version `0.2.3`, min confidence `75`, max confidence delta `20`, max artifact bytes `16000`, max review attempts `3`, min deposit `1000000000000000`
 - Source parity: `VERIFIED` via `gen_getContractCode`, 18,400 bytes, SHA-256 `1e8377c3fc49a4f8f49eeeea59e0ca8e2fb49b3de7650985024c207cfe306b37`
 
+### v0.2.3 live malformed-output verification
+
+- Proposal: `0xa63b5b23b8c370ef4adfc2e3ba188ba114b86fe3283e84be64e4fbcae723e42a`
+  - ID: `CUSTODIA-V23-REVIEW-1790193048775`
+  - `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; canonical state `pending`.
+- Review: `0xf59ef0743e4c5d52a8629f7862a4f4602fdacaa9f05e6459fd78920ee3df7ec0`
+  - `UNDETERMINED / MAJORITY_DISAGREE / GenVM SUCCESS`.
+  - Canonical state remained `pending`; no approval or payout occurred.
+- Cancellation/refund: `0x1446d6d89d230e25996ca40f3b979482b98e1a01ef759de18f84e806d8e41383`
+  - `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`.
+  - Final state `cancelled`, `deposited=0`, `settlement=cancelled_refunded`.
+
+This is the expected v0.2.3 liveness behavior: malformed provider output is
+not an agreed semantic result and instead fails equivalence, preserving the
+prior state for retry or safe refund.
+
 ## Historical v0.1.1 live lifecycle evidence
 
 The v0.1.1 proposal
