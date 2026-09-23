@@ -98,13 +98,18 @@ The current Studionet provider still returns a structured-output shape that
 does not pass the contract's deterministic parser. This is recorded as safe
 fail-closed behavior; no approved live payout is claimed.
 
-### v0.2.3 hardening (not deployed)
+### v0.2.3 hardening and deployment
 
 The unreleased v0.2.3 source changes only malformed-model consensus handling:
 malformed output now makes validator equivalence fail, forcing leader rotation
 instead of finalizing an agreed `retryable / malformed_model_output` result.
-The strict approval tuple and fail-closed artifact behavior are unchanged. No
-v0.2.3 deployment address or live evidence is claimed.
+The strict approval tuple and fail-closed artifact behavior are unchanged.
+
+- Address: `0xa2F83008C4a1d3c4e39A59502765648d6902dfD9`
+- Deployment transaction: `0xaf2571a018f65a781924976bd46643e9a42bbebc3004040444139a6b374105a9`
+- Finalization: `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
+- `get_info()`: `Custodia`, version `0.2.3`, min confidence `75`, max confidence delta `20`, max artifact bytes `16000`, max review attempts `3`, min deposit `1000000000000000`
+- Source parity: `VERIFIED` via `gen_getContractCode`, 18,400 bytes, SHA-256 `1e8377c3fc49a4f8f49eeeea59e0ca8e2fb49b3de7650985024c207cfe306b37`
 
 ## Historical v0.1.1 live lifecycle evidence
 

@@ -116,10 +116,17 @@ This preserves the fail-closed live evidence. A live approved payout is not
 claimed because the Studionet provider continues to return an opaque malformed
 structured result.
 
-## v0.2.3 hardening (unreleased)
+## v0.2.3 hardening and deployment
 
 The working source now treats `malformed_model_output` as validator
 disagreement rather than an agreed semantic result. This forces leader
 rotation and prevents identical provider-shape failures from being committed
-as consensus. Approval predicates and artifact checks remain unchanged. A
-fresh deployment is required before v0.2.3 is live.
+as consensus. Approval predicates and artifact checks remain unchanged.
+
+The hardened source is deployed at
+`0xa2F83008C4a1d3c4e39A59502765648d6902dfD9` with deployment transaction
+`0xaf2571a018f65a781924976bd46643e9a42bbebc3004040444139a6b374105a9`.
+It finalized with `MAJORITY_AGREE / GenVM SUCCESS`. Source retrieval through
+`gen_getContractCode` matched the repository byte-for-byte: 18,400 bytes and
+SHA-256 `1e8377c3fc49a4f8f49eeeea59e0ca8e2fb49b3de7650985024c207cfe306b37`.
+`get_info()` reports version `0.2.3`.
