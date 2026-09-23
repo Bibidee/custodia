@@ -88,11 +88,26 @@ recovery deadline that refunds the sponsor.
 
 The v0.2.2 source adds bounded semantic equivalence and adversarial tests. Its
 source commit is `17a3fbe4fc2309aec14f27b81e3988ac0bd2d967`. Its
-current source SHA-256 is `2f62f4d2e6ff62a4f8c83fe96a1f8973b83c9026ea715f750866483401e44ab3`.
-It
-is not yet deployed. The v0.2.1 deployment above remains historical until a
-fresh v0.2.2 deployment is explicitly approved and source parity is verified.
+source SHA-256 is `2f62f4d2e6ff62a4f8c83fe96a1f8973b83c9026ea715f750866483401e44ab3`.
+It is deployed at `0xe27919aEd70acBE7773D125B1efD70a948d2285c` via
+`0x6cfe58d6f3def5220b45a02e9827013db0d5e7f1e2883f2e0d6dfd1767421952`.
+The deployment finalized as `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`;
+`gen_getContractCode` returned 17,875 bytes with byte-for-byte parity.
+
+- `get_info()`: `Custodia`, version `0.2.2`, min confidence `75`, max confidence delta `20`, max artifact bytes `16000`, max review attempts `3`, min deposit `1000000000000000`
+- Explorer: https://explorer-studio.genlayer.com/address/0xe27919aEd70acBE7773D125B1efD70a948d2285c
 
 The release gate currently passes 12 Direct Mode tests, including approved
 consumer settlement, ledger-zeroing before payout, and settlement replay
 rejection. Preflight, GenVM lint, and ABI/schema generation also pass.
+
+The first v0.2.2 live proposal
+`0x6e5739fc937c214f88f768a25abea5ae46a833c953669b8d66875eff524c2c9f`
+created `CUSTODIA-V22-LIVE-1790166530699` and finalized with an exact pending
+state read. Review
+`0x229a7501615ee458d0cf17ef2fa97a9102ca35577c38108f978b54485ad5f7a3`
+finalized `MAJORITY_AGREE / GenVM SUCCESS` but safely recorded
+`retryable / malformed_model_output`; no approval or payout was created.
+This preserves the fail-closed live evidence. A live approved payout is not
+claimed because the Studionet provider continues to return an opaque malformed
+structured result.
