@@ -1,4 +1,4 @@
-# v0.1.0
+# v0.1.1
 # { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 """Custodia: hash-bound, consensus-reviewed milestone escrow.
 
@@ -58,22 +58,6 @@ class Escrow:
     deposited: u256
     settled_amount: u256
     settlement: str
-
-
-class EscrowCreated(gl.Event):
-    def __init__(self, escrow_id: str, sponsor: Address, beneficiary: Address, amount: u256, /, **blob): ...
-
-
-class EscrowReviewed(gl.Event):
-    def __init__(self, escrow_id: str, status: str, confidence: u256, /, **blob): ...
-
-
-class EscrowSettled(gl.Event):
-    def __init__(self, escrow_id: str, outcome: str, recipient: Address, amount: u256, /, **blob): ...
-
-
-class EscrowCancelled(gl.Event):
-    def __init__(self, escrow_id: str, sponsor: Address, amount: u256, /, **blob): ...
 
 
 @gl.evm.contract_interface
@@ -265,7 +249,6 @@ class Custodia(gl.Contract):
         now = u256(execution_time())
         self.escrows[escrow_id] = Escrow(escrow_id, gl.message.sender_address, beneficiary_address, consumer_address, deliverable_url, canonical_hash(deliverable_hash), evidence_url, canonical_hash(evidence_hash), bounded(brief, "brief"), u256(window), u256(int(now) + window), PENDING, u256(0), "", gl.message.value, u256(0), "")
         self.escrow_count = u256(int(self.escrow_count) + 1)
-        EscrowCreated(escrow_id, gl.message.sender_address, beneficiary_address, gl.message.value).emit()
 
     @gl.public.write
     def review(self, escrow_id: str) -> None:
@@ -286,13 +269,11 @@ class Custodia(gl.Contract):
         result = gl.vm.run_nondet_unsafe(leader, validator)
         if not isinstance(result, dict) or result.get("kind") != "analysis" or not valid_analysis(result.get("result")):
             escrow.status = RETRYABLE
-            EscrowReviewed(escrow.id, RETRYABLE, u256(0)).emit()
             return
         analysis = result["result"]
         escrow.confidence = u256(analysis["confidence"])
         escrow.rationale = clean(analysis["rationale"])
         escrow.status = verdict(analysis)
-        EscrowReviewed(escrow.id, escrow.status, escrow.confidence).emit()
 
     @gl.public.write
     def settle(self, escrow_id: str) -> None:
@@ -312,7 +293,6 @@ class Custodia(gl.Contract):
         escrow.settlement = "paid_beneficiary" if escrow.status == CONSUMED else "refunded_sponsor"
         recipient = escrow.beneficiary if escrow.status == CONSUMED else escrow.sponsor
         send_gen(recipient, amount)
-        EscrowSettled(escrow.id, escrow.settlement, recipient, amount).emit()
 
     @gl.public.write
     def cancel(self, escrow_id: str) -> None:
@@ -323,7 +303,6 @@ class Custodia(gl.Contract):
         escrow.deposited = u256(0)
         escrow.status, escrow.settlement = CANCELLED, "cancelled_refunded"
         send_gen(escrow.sponsor, amount)
-        EscrowCancelled(escrow.id, escrow.sponsor, amount).emit()
 
     @gl.public.view
     def get_escrow(self, escrow_id: str) -> dict:
@@ -332,4 +311,4 @@ class Custodia(gl.Contract):
 
     @gl.public.view
     def get_info(self) -> dict:
-        return {"name": "Custodia", "version": "0.1.0", "min_confidence": str(MIN_CONFIDENCE), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "escrow_count": str(self.escrow_count)}
+        return {"name": "Custodia", "version": "0.1.1", "min_confidence": str(MIN_CONFIDENCE), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "escrow_count": str(self.escrow_count)}
