@@ -1,0 +1,105 @@
+{
+  "ctor": {
+    "params": [],
+    "kwparams": {}
+  },
+  "methods": {
+    "cancel": {
+      "params": [
+        [
+          "escrow_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    },
+    "create_escrow": {
+      "params": [
+        [
+          "escrow_id",
+          "string"
+        ],
+        [
+          "beneficiary",
+          "string"
+        ],
+        [
+          "consumer",
+          "string"
+        ],
+        [
+          "deliverable_url",
+          "string"
+        ],
+        [
+          "deliverable_hash",
+          "string"
+        ],
+        [
+          "evidence_url",
+          "string"
+        ],
+        [
+          "evidence_hash",
+          "string"
+        ],
+        [
+          "brief",
+          "string"
+        ],
+        [
+          "review_window",
+          "int"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": true
+    },
+    "get_escrow": {
+      "params": [
+        [
+          "escrow_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "dict"
+    },
+    "get_info": {
+      "params": [],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "dict"
+    },
+    "review": {
+      "params": [
+        [
+          "escrow_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    },
+    "settle": {
+      "params": [
+        [
+          "escrow_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    }
+  }
+}
