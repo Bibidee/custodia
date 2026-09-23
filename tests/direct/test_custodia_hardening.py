@@ -45,10 +45,10 @@ def test_structured_output_normalization_and_retry(direct_vm, direct_deploy, dir
     contract = deployed(direct_deploy, direct_vm)
     create(contract, direct_vm, direct_alice, direct_bob)
     web_ok(direct_vm)
-    direct_vm.mock_llm("Hardening fixture", json.dumps({"result": {
+    direct_vm.mock_llm("Hardening fixture", "```json\n" + json.dumps({"result": {
         "deliverable_match": " YES ", "evidence_support": "YES", "risk": "NO",
-        "confidence": "90", "rationale": "Exact verified fixture."
-    }}))
+        "confidence": "90", "rationale": "Exact verified fixture.", "provider_note": "ignored metadata"
+    }}) + "\n```")
     direct_vm.sender = direct_alice
     contract.review("H-001")
     assert contract.get_escrow("H-001")["status"] == "approved"

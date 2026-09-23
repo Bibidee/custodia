@@ -1,4 +1,4 @@
-# v0.2.0
+# v0.2.1
 # { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 """Custodia: hash-bound, consensus-reviewed milestone escrow.
 
@@ -38,6 +38,7 @@ MIN_CONFIDENCE = 75
 MIN_DEPOSIT = 10**15
 MAX_REVIEW_ATTEMPTS = 3
 EXPECTED = "[EXPECTED]"
+ANALYSIS_KEYS = ("deliverable_match", "evidence_support", "risk", "confidence", "rationale")
 
 
 @allow_storage
@@ -177,12 +178,24 @@ def fetch_verified(url: str, expected_hash: str) -> str:
 
 
 def normalize_model_output(raw):
-    value = json.loads(raw) if isinstance(raw, str) else raw
+    if isinstance(raw, str):
+        text = raw.strip()
+        if text.startswith("```") and text.endswith("```"):
+            lines = text.splitlines()
+            if len(lines) >= 3 and lines[0].strip().lower() in ("```", "```json") and lines[-1].strip() == "```":
+                text = "\n".join(lines[1:-1]).strip()
+        value = json.loads(text)
+    else:
+        value = raw
     if isinstance(value, dict) and set(value) == {"result"} and isinstance(value["result"], dict):
         value = value["result"]
     if not isinstance(value, dict):
         return value
-    normalized = dict(value)
+    if not all(key in value for key in ANALYSIS_KEYS):
+        return value
+    # Ignore non-semantic metadata only after all required fields are present.
+    # Approval still depends exclusively on the complete bounded tuple below.
+    normalized = {key: value[key] for key in ANALYSIS_KEYS}
     for key in ("deliverable_match", "evidence_support", "risk"):
         if isinstance(normalized.get(key), str):
             normalized[key] = normalized[key].strip().lower()
@@ -377,4 +390,4 @@ class Custodia(gl.Contract):
 
     @gl.public.view
     def get_info(self) -> dict:
-        return {"name": "Custodia", "version": "0.2.0", "min_confidence": str(MIN_CONFIDENCE), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "max_review_attempts": str(MAX_REVIEW_ATTEMPTS), "min_deposit": str(MIN_DEPOSIT), "escrow_count": str(self.escrow_count)}
+        return {"name": "Custodia", "version": "0.2.1", "min_confidence": str(MIN_CONFIDENCE), "max_artifact_bytes": str(MAX_ARTIFACT_BYTES), "max_review_attempts": str(MAX_REVIEW_ATTEMPTS), "min_deposit": str(MIN_DEPOSIT), "escrow_count": str(self.escrow_count)}
