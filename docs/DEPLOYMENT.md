@@ -1,5 +1,35 @@
 # Custodia deployment
 
+## Current v0.2.5 Studionet deployment
+
+- Source commit: `6a137bbf172ff2b69e463e1f54ec1b19da9b1c98`
+- Contract: [`0xbbE551d0197279E17dC0Ed82b876371856EF03cd`](https://explorer-studio.genlayer.com/address/0xbbE551d0197279E17dC0Ed82b876371856EF03cd)
+- Deployment transaction: [`0x1c275cb424cbf7e5bde25851f3cba149d7869be32fbb5ce704f18444f2176707`](https://explorer-studio.genlayer.com/tx/0x1c275cb424cbf7e5bde25851f3cba149d7869be32fbb5ce704f18444f2176707)
+- Deployment: `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
+- Source parity: exact; 22,489 bytes, SHA-256 `e9429e76a205f1fd506f9c3a75002bffa4c346d2723ac13db6eef7690ad6a000`
+- `get_info()`: `Custodia`, version `0.2.5`, min confidence `75`, max confidence delta `20`, max artifact bytes `16000`, max review attempts `3`, min deposit `1000000000000000`
+- Release gate: 15 tests passed, preflight/lint/schema passed; [GitHub Actions run 35935645228](https://github.com/Bibidee/custodia/actions/runs/35935645228) passed for the source commit.
+
+The v0.2.5 live proposal transaction
+[`0x9ceb4f1653388580a8a13fbe029c7659b7ea606aaf4fc6bdeaf9620333891fae`](https://explorer-studio.genlayer.com/tx/0x9ceb4f1653388580a8a13fbe029c7659b7ea606aaf4fc6bdeaf9620333891fae)
+finalized successfully and created
+`CUSTODIA-V25-PROMPT-1790207905899` in `pending` with the exact committed
+artifact URLs/hashes and a `1000000000000000` wei deposit. Review transaction
+[`0x11a5ec2779ae6abec1c93226bc0bed551d4665b080e7a0c25133fee7f13b22f5`](https://explorer-studio.genlayer.com/tx/0x11a5ec2779ae6abec1c93226bc0bed551d4665b080e7a0c25133fee7f13b22f5)
+finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; canonical state is
+`approved`, confidence `88`. Stored rationale: “Deliverable CUSTODIA-LIVE-001
+is confirmed complete by independent evidence, matches the committed
+description, and is ready for beneficiary release with no contradictions or
+safety concerns.”
+
+The payout is still time-gated until `timeout_at=1790211507`
+(`2026-09-24 00:58:27 UTC`); no settlement or `consumed` state is claimed.
+This test used one account for sponsor, beneficiary, and consumer. The immutable
+sources were independently fetched and verified:
+
+- Deliverable: `https://raw.githubusercontent.com/Bibidee/custodia/2b8e414a8f1000a4679d6a7f1a9926009b4e36cd/evidence/live-deliverable.txt` — SHA-256 `0xb7071f431f30123d20f407f5819e7626792e9e6a8c26e3d7bb51f8cdc5ebeed8`
+- Evidence: `https://cdn.jsdelivr.net/gh/Bibidee/custodia@2b8e414a8f1000a4679d6a7f1a9926009b4e36cd/evidence/live-evidence.txt` — SHA-256 `0x090299995751c5a4e8c06fa36259b1e9ded8a0f544cbf4bda2af1ae8d7e035cd`
+
 ## Historical v0.1.1 deployment
 
 - Network: Studionet
@@ -149,16 +179,16 @@ and refunded in
 which finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; final state was
 `cancelled`, `deposited=0`, `settlement=cancelled_refunded`.
 
-### v0.2.5 candidate
+### v0.2.5 prompt correction
 
-The candidate makes every enum's permitted lowercase tokens, field meaning,
-confidence type/range, rationale bound, and JSON-only format explicit in the
-review prompt. It preserves strict parser validation and the current approval
-predicate. The diagnosis points to an enum mismatch in `deliverable_match`,
-but the raw enum value is unavailable, so the prior prompt's lack of explicit
-vocabulary is a plausible cause, not a confirmed provider response. Do not
-claim a successful live approval or payout until the new source is deployed
-and a real approved settlement is observed.
+The v0.2.5 prompt explicitly specifies each semantic field's meaning and exact
+lowercase enum values, confidence type/range, rationale bound, and JSON-only
+response. Parsing remains strict; no new values or synonyms can approve. The
+v0.2.4 diagnostic identified an invalid `deliverable_match` enum, but the exact
+provider token is unavailable. Explicit vocabulary is therefore a targeted
+compatibility improvement, not proof of the original token's wording. The live
+v0.2.5 approval is recorded in the current deployment section above; the
+beneficiary payment remains time-gated.
 
 ## Historical v0.1.1 live lifecycle evidence
 

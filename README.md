@@ -24,11 +24,17 @@ availability and semantic uncertainty fail closed.
 
 ## Release evidence
 
-The deployed v0.2.0 source is preserved at commit
+Current Studionet release: v0.2.5 at
+[`0xbbE551d0197279E17dC0Ed82b876371856EF03cd`](https://explorer-studio.genlayer.com/address/0xbbE551d0197279E17dC0Ed82b876371856EF03cd).
+Its live review reached `approved` (confidence 88, `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`). The beneficiary payout remains time-gated until the review
+window ends; no `consumed` state or payout is claimed yet. Earlier versions in
+this section are historical evidence.
+
+The historical v0.2.0 source is preserved at commit
 `a3696e40b8bb1d3f8ce3505806e273ba93fb25e0` with SHA-256
 `402e67122ad88fdb2d315cfb50cedf010624f04ac99eee75b6eb9eff022ff7c9`.
-The v0.2.0 Studionet deployment is historical. The hardened v0.2.1 source
-is at commit `8d3073798c9583fcc9edae229fa44399cf18ca33` with SHA-256
+The v0.2.0 Studionet deployment is historical. The v0.2.1 deployment is also
+historical/superseded; its source is at commit `8d3073798c9583fcc9edae229fa44399cf18ca33` with SHA-256
 `bf54d33f3d1756920714d3d8ede4d8883b7a51760eb3cfd51a52374a5cab508b` and
 is deployed at `0x591f06AD9a5Ea228047B4b23209e2116df9Fd353` via transaction
 `0xe928f72a5cdfbe1c00fe519c069b50ccec3745a9b855f8b6a93c16ae857a9269`.
@@ -84,7 +90,7 @@ Validators must now agree on the final verdict, all three semantic fields, and
 stay within a 20-point confidence band. Consumer abandonment is bounded by a
 recovery deadline that refunds the sponsor.
 
-## v0.2.2 release candidate
+## Historical v0.2.2 deployment
 
 The v0.2.2 source adds bounded semantic equivalence and adversarial tests. Its
 source commit is `17a3fbe4fc2309aec14f27b81e3988ac0bd2d967`. Its
@@ -97,9 +103,9 @@ The deployment finalized as `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`;
 - `get_info()`: `Custodia`, version `0.2.2`, min confidence `75`, max confidence delta `20`, max artifact bytes `16000`, max review attempts `3`, min deposit `1000000000000000`
 - Explorer: https://explorer-studio.genlayer.com/address/0xe27919aEd70acBE7773D125B1efD70a948d2285c
 
-The release gate currently passes 12 Direct Mode tests, including approved
-consumer settlement, ledger-zeroing before payout, and settlement replay
-rejection. Preflight, GenVM lint, and ABI/schema generation also pass.
+That release passed 12 Direct Mode tests, including approved consumer
+settlement, ledger-zeroing before payout, and settlement replay rejection. The
+current v0.2.5 gate passes 15 tests.
 
 The first v0.2.2 live proposal
 `0x6e5739fc937c214f88f768a25abea5ae46a833c953669b8d66875eff524c2c9f`
@@ -112,13 +118,12 @@ After the timeout, settlement
 `0x6a4365727186afd5a96847b191751f68c2b5d091c37621d9fc0b7591b5a27f8e`
 finalized `MAJORITY_AGREE / GenVM SUCCESS`, refunded the sponsor, and left
 `status=settled`, `deposited=0`, `settled_amount=1000000000000000`.
-This preserves the fail-closed live evidence. A live approved payout is not
-claimed because the Studionet provider continues to return an opaque malformed
-structured result.
+This records the fail-closed result for that historical attempt; later
+v0.2.5 evidence below demonstrates an approved semantic review.
 
-## v0.2.3 hardening and deployment
+## Historical v0.2.3 hardening and deployment
 
-The working source now treats `malformed_model_output` as validator
+The v0.2.3 source treated `malformed_model_output` as validator
 disagreement rather than an agreed semantic result. This forces leader
 rotation and prevents identical provider-shape failures from being committed
 as consensus. Approval predicates and artifact checks remain unchanged.
@@ -167,12 +172,38 @@ text is unknown. The escrow was then cancelled and refunded in
 finalizing `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS` with
 `status=cancelled`, `deposited=0`, and `settlement=cancelled_refunded`.
 
-## v0.2.5 candidate
+## v0.2.5 deployment and live approval
 
-This candidate clarifies the semantic prompt with exact lowercase enum
-vocabulary and field definitions, along with explicit JSON type and length
-constraints. It does not accept synonyms or change the strict approval tuple.
-The v0.2.4 invalid-enum diagnostic suggests that the prior prompt's omission of
-allowed values may have contributed to the mismatch; because the raw value is
-unavailable, that causal link is plausible but not proven. v0.2.5 is not
-deployed until its release gate and source-parity checks complete.
+The v0.2.5 prompt now states the exact lowercase enum vocabulary and field
+meanings, along with JSON type and length constraints. The parser remains
+strict: no synonyms are accepted and the approval tuple is unchanged. This
+addresses the specific invalid-enum field diagnosed on v0.2.4, although the
+provider's exact rejected token remains unavailable.
+
+- Contract: `0xbbE551d0197279E17dC0Ed82b876371856EF03cd`
+- Deployment transaction: `0x1c275cb424cbf7e5bde25851f3cba149d7869be32fbb5ce704f18444f2176707`
+- Source commit: `6a137bbf172ff2b69e463e1f54ec1b19da9b1c98`
+- Deployment result: `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`
+- Explorer: [contract](https://explorer-studio.genlayer.com/address/0xbbE551d0197279E17dC0Ed82b876371856EF03cd) · [deployment](https://explorer-studio.genlayer.com/tx/0x1c275cb424cbf7e5bde25851f3cba149d7869be32fbb5ce704f18444f2176707)
+- Source parity: byte-for-byte verified through `gen_getContractCode`, 22,489 bytes, SHA-256 `e9429e76a205f1fd506f9c3a75002bffa4c346d2723ac13db6eef7690ad6a000`
+- `get_info()`: Custodia v0.2.5, minimum confidence 75, maximum confidence delta 20, maximum artifact size 16,000 bytes, maximum review attempts 3, minimum deposit 0.001 GEN
+- Release checks: 15 tests passed; preflight, GenVM lint and ABI/schema passed; GitHub CI run [35935645228](https://github.com/Bibidee/custodia/actions/runs/35935645228) passed.
+
+The live escrow `CUSTODIA-V25-PROMPT-1790207905899` proposed in
+[`0x9ceb4f1653388580a8a13fbe029c7659b7ea606aaf4fc6bdeaf9620333891fae`](https://explorer-studio.genlayer.com/tx/0x9ceb4f1653388580a8a13fbe029c7659b7ea606aaf4fc6bdeaf9620333891fae)
+finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS` and stored the exact
+committed artifact URLs and hashes. Its semantic review
+[`0x11a5ec2779ae6abec1c93226bc0bed551d4665b080e7a0c25133fee7f13b22f5`](https://explorer-studio.genlayer.com/tx/0x11a5ec2779ae6abec1c93226bc0bed551d4665b080e7a0c25133fee7f13b22f5)
+also finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; canonical state is
+`approved`, confidence `88`, with rationale: “Deliverable CUSTODIA-LIVE-001 is
+confirmed complete by independent evidence, matches the committed description,
+and is ready for beneficiary release with no contradictions or safety
+concerns.” The 0.001 GEN remains deposited until the protocol's release window
+ends at `timeout_at=1790211507` (`2026-09-24 00:58:27 UTC`); no payout or
+consumed state is claimed yet. This fixture used the same test account as
+sponsor, beneficiary, and consumer.
+
+The immutable artifacts were independently fetched and hash-verified:
+
+- Deliverable: `https://raw.githubusercontent.com/Bibidee/custodia/2b8e414a8f1000a4679d6a7f1a9926009b4e36cd/evidence/live-deliverable.txt` — SHA-256 `0xb7071f431f30123d20f407f5819e7626792e9e6a8c26e3d7bb51f8cdc5ebeed8`
+- Evidence: `https://cdn.jsdelivr.net/gh/Bibidee/custodia@2b8e414a8f1000a4679d6a7f1a9926009b4e36cd/evidence/live-evidence.txt` — SHA-256 `0x090299995751c5a4e8c06fa36259b1e9ded8a0f544cbf4bda2af1ae8d7e035cd`
