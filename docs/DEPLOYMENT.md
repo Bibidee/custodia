@@ -22,10 +22,18 @@ is confirmed complete by independent evidence, matches the committed
 description, and is ready for beneficiary release with no contradictions or
 safety concerns.”
 
-The payout is still time-gated until `timeout_at=1790211507`
-(`2026-09-24 00:58:27 UTC`); no settlement or `consumed` state is claimed.
-This test used one account for sponsor, beneficiary, and consumer. The immutable
-sources were independently fetched and verified:
+The payout was time-gated until `timeout_at=1790211507`
+(`2026-09-24 00:58:27 UTC`). After the StudioNet block timestamp exceeded
+that value, the designated consumer submitted settlement transaction
+[`0x8fbc20bfa36316231afe30dd0a70de8c58954f0fc1d55230cb23fcf3f856e22c`](https://explorer-studio.genlayer.com/tx/0x8fbc20bfa36316231afe30dd0a70de8c58954f0fc1d55230cb23fcf3f856e22c).
+It finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS` with five of five
+validator votes agreeing. The canonical post-settlement read confirms
+`status=consumed`, `deposited=0`, `settlement=paid_beneficiary`, and
+`settled_amount=1000000000000000` wei (0.001 GEN). The CLI account balance
+read changed from `448.9999 GEN` before settlement to `449.0009 GEN` after.
+This test used one account for sponsor, beneficiary, and consumer, so it proves
+the contract's one-time beneficiary settlement path but not a transfer between
+distinct users. The immutable sources were independently fetched and verified:
 
 - Deliverable: `https://raw.githubusercontent.com/Bibidee/custodia/2b8e414a8f1000a4679d6a7f1a9926009b4e36cd/evidence/live-deliverable.txt` — SHA-256 `0xb7071f431f30123d20f407f5819e7626792e9e6a8c26e3d7bb51f8cdc5ebeed8`
 - Evidence: `https://cdn.jsdelivr.net/gh/Bibidee/custodia@2b8e414a8f1000a4679d6a7f1a9926009b4e36cd/evidence/live-evidence.txt` — SHA-256 `0x090299995751c5a4e8c06fa36259b1e9ded8a0f544cbf4bda2af1ae8d7e035cd`

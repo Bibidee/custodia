@@ -26,9 +26,7 @@ availability and semantic uncertainty fail closed.
 
 Current Studionet release: v0.2.5 at
 [`0xbbE551d0197279E17dC0Ed82b876371856EF03cd`](https://explorer-studio.genlayer.com/address/0xbbE551d0197279E17dC0Ed82b876371856EF03cd).
-Its live review reached `approved` (confidence 88, `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`). The beneficiary payout remains time-gated until the review
-window ends; no `consumed` state or payout is claimed yet. Earlier versions in
-this section are historical evidence.
+Its live review reached `approved` (confidence 88, `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`), then the designated consumer settled after the release window. The settlement finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; canonical state is `consumed`, `deposited=0`, `settlement=paid_beneficiary`, and `settled_amount=1000000000000000` wei (0.001 GEN). The transaction is [`0x8fbc20bfa36316231afe30dd0a70de8c58954f0fc1d55230cb23fcf3f856e22c`](https://explorer-studio.genlayer.com/tx/0x8fbc20bfa36316231afe30dd0a70de8c58954f0fc1d55230cb23fcf3f856e22c). This fixture used one test account as sponsor, beneficiary, and consumer, so the recorded payout went to that same beneficiary/consumer address. Earlier versions in this section are historical evidence.
 
 The historical v0.2.0 source is preserved at commit
 `a3696e40b8bb1d3f8ce3505806e273ba93fb25e0` with SHA-256
@@ -198,10 +196,18 @@ also finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS`; canonical state is
 `approved`, confidence `88`, with rationale: “Deliverable CUSTODIA-LIVE-001 is
 confirmed complete by independent evidence, matches the committed description,
 and is ready for beneficiary release with no contradictions or safety
-concerns.” The 0.001 GEN remains deposited until the protocol's release window
-ends at `timeout_at=1790211507` (`2026-09-24 00:58:27 UTC`); no payout or
-consumed state is claimed yet. This fixture used the same test account as
-sponsor, beneficiary, and consumer.
+concerns.” The release window ended at `timeout_at=1790211507`
+(`2026-09-24 00:58:27 UTC`). The designated consumer then submitted settlement
+transaction
+[`0x8fbc20bfa36316231afe30dd0a70de8c58954f0fc1d55230cb23fcf3f856e22c`](https://explorer-studio.genlayer.com/tx/0x8fbc20bfa36316231afe30dd0a70de8c58954f0fc1d55230cb23fcf3f856e22c),
+which finalized `FINALIZED / MAJORITY_AGREE / GenVM SUCCESS` with all five
+validators agreeing. The canonical escrow state is `consumed`,
+`deposited=0`, `settlement=paid_beneficiary`, and
+`settled_amount=1000000000000000` wei. The designated account balance read
+increased from `448.9999 GEN` to `449.0009 GEN`. This fixture used the same
+test account as sponsor, beneficiary, and consumer, so it demonstrates recorded
+beneficiary payout and one-time consumption, not a transfer between distinct
+users.
 
 The immutable artifacts were independently fetched and hash-verified:
 
